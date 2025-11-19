@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Arfin & Sulaika — Wedding Invitation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap');
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+      color:#6a0f1c; /* maroon */
+      background-color:#000;
+      overflow:hidden;
+    }
+
+    /* Background layers (parallax) */
+    .bg-layer{position:fixed;inset:0;background-size:cover;background-position:center;transform:translateZ(0);will-change:transform}
+    #bg1{background-image:url('bg_image.jpg');filter:brightness(0.6);z-index:-4}
+    #bg2{background-image:linear-gradient(rgba(255,255,255,0.02),rgba(0,0,0,0.03));z-index:-3;mix-blend-mode:overlay}
+
+    /* subtle particle canvas */
+    #particles{position:fixed;inset:0;pointer-events:none;z-index:-2}
+
+    /* Intro */
+    #intro{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px;position:relative}
+    #intro-card{width:92%;max-width:420px;background:rgba(255,255,255,0.06);backdrop-filter:blur(6px) saturate(120%);border-radius:18px;padding:20px;border:1px solid rgba(255,255,255,0.06)}
+    h1.intro-title{font-family:'Playfair Display',sans-serif;font-size:1rem;letter-spacing:1px}
+    .intro-names{font-family:'Tangerine', cursive !important;font-size:3.2rem;color:transparent;background:linear-gradient(90deg,#b8945f,#e5d1a8);-webkit-background-clip:text;background-clip:text;margin-top:10px}
+    .intro-sub{font-family:'Playfair Display',sans-serif;margin-top:8px;font-size:0.85rem}
+    .btn-open{margin-top:18px;background:#fff;border-radius:28px;padding:12px 26px;border:0;font-weight:700;color:#6a0f1c}
+    .pulse{animation: pulse 1500ms infinite}
+    @keyframes pulse{0%{transform:scale(1)}50%{transform:scale(1.03)}100%{transform:scale(1)}}
+
+    /* sections container with scroll-snap */
+    #allSections{height:100vh;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;display:none}
+    section{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;scroll-snap-align:start}
+
+    /* section typography */
+    .small{font-size:0.95rem}
+    .names-large{font-family:'Tangerine', cursive !important;font-size:4.2rem;font-weight:700;line-height:1.05;margin-top:12px;background:linear-gradient(90deg,#b8945f,#e5d1a8);-webkit-background-clip:text;color:transparent}
+    .muted{font-size:0.95rem}
+
+    /* ornamental divider SVG placeholder */
+    .orn{width:78%;max-width:420px;margin:16px auto}
+
+    .btn-map { display:inline-block;margin-top:18px;background:#fff;border-radius:28px;padding:12px 26px;border:0;font-weight:700;color:#6a0f1c !important;text-decoration:none !important;font-size:1rem; }
+
+    /* family / details */
+    .family{width:88%;max-width:420px}
+    .family .title{font-weight:700;font-size:0.95rem}
+    /* .names{font-family:'Playfair Display',cursive;font-weight:700;font-size:1.15rem;margin-top:8px} */
+    .names{text-shadow: 0.3px 0.3px 0.3px rgba(0,0,0,0.25);color: #53140d; font-family: 'Playfair Display',cursive;}
+
+    /* info blocks */
+    .info-block{width:88%;max-width:520px}
+    .info-title{font-weight:700;margin-top:14px}
+    .info-text{margin-top:6px;line-height:1.5}
+
+    /* countdown */
+    .count-grid{display:flex;gap:10px;justify-content:center;align-items:center}
+    .count-item{text-align:center}
+    .count-label{font-size:0.85rem;margin-bottom:8px}
+    .count-num{background:#111;color:#fff;padding:12px 18px;border-radius:8px;min-width:62px;font-size:1.8rem}
+
+    /* guestbook */
+    .guest{max-width:540px;padding:4px}
+
+    /* audio control */
+    .audio-btn{position:fixed;top:18px;right:14px;background:rgba(255,255,255,0.08);border-radius:999px;padding:8px 12px;z-index:999;color:#fff;border:1px solid rgba(255,255,255,0.06)}
+
+    /* swipe popup */
+    #swipePopup{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.66);color:#fff;padding:10px 18px;border-radius:999px;opacity:0;transition:opacity .4s;z-index:999}
+    #swipePopup.show{opacity:1}
+
+    /* progress indicator right */
+    .progress-ind{position:fixed;right:12px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;z-index:999}
+    .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.5)}
+    .dot.active{background:#b8945f}
+
+    /* responsive tweaks */
+    @media (max-width:420px){
+      .names-large{font-size:2.8rem}
+      .intro-names{font-size:3.2rem; font-weight: 700;}
+      .count-num{font-size:1.4rem;min-width:48px}
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Parallax background layers -->
+  <div id="bg1" class="bg-layer"></div>
+  <div id="bg2" class="bg-layer"></div>
+  <canvas id="particles"></canvas>
+
+  <!-- audio control (user replace "nikah.mp3") -->
+  <audio id="bgAudio" loop src="jashn_e_bahara_instr.mp3"></audio>
+  <button id="audioBtn" class="audio-btn" aria-pressed="false">🔈 Play Music</button>
+
+  <!-- swipe popup -->
+  <div id="swipePopup">Swipe up to continue ↓</div>
+
+  <!-- small progress indicator -->
+  <div class="progress-ind" id="progressDots"></div>
+
+  <!-- Intro (glass card, text not blurred) -->
+  <section id="intro" class="section">
+    <!-- Bismillah decorative SVG (Islamic touch) -->
+    <div style="width:86%;max-width:420px;margin:0 auto;">
+      <svg viewBox="0 0 800 80" style="width:100%;height:44px;opacity:0.95;" xmlns="http://www.w3.org/2000/svg">
+        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#6a0f1c" font-family="serif" font-size="50">بِسْمِ اللَّهِ الرَّحْمَـٰنِ الرَّحِيمِ</text>
+      </svg>
+    </div>
+
+    <div id="intro-card">
+      <h1 class="intro-title">WEDDING INVITATION</h1>
+      <div class="intro-names pulse">Arfin <br>&amp;<br>Sulaika</div>
+      <div class="intro-sub">THURSDAY — 01 JANUARY 2026</div>
+      <button class="btn-open" onclick="openInvite()">Open Invitation</button>
+    </div>
+  </section>
+
+  <!-- Main scroll sections (hidden until open) -->
+  <div id="allSections">
+
+    <!-- Section 1: Hero -->
+    <section>
+      <h2 class="small">WEDDING INVITATION</h2>
+      <div class="names-large">Noor Arfin<br>&amp;<br>Sulaika Amani</div>
+      <div class="muted" style="margin-top:12px;font-weight:700;">THURSDAY</div>
+      <div class="muted">01 JANUARY 2026</div>
+    </section>
+
+    <!-- Section 2: Families -->
+    <section>
+      <div class="family">
+        <div class="title small">ASSALAMU ALAIKUM WBT</div>
+        <div class="orn"><svg viewBox="0 0 400 16" width="100%"><g fill="none" stroke="#6a0f1c" stroke-width="2" stroke-linecap="round"><path d="M0 8 L120 8" /><path d="M145 8 L255 8" /><path d="M280 8 L400 8" /><circle cx="200" cy="8" r="2" fill="#6a0f1c" /></g></svg></div>
+
+        <div style="margin-top:6px;">
+          <div class="title">GROOM'S FAMILY</div>
+          <div class="names">Abdul Hakeem &amp; Thahira Banu</div>
+        </div>
+
+        <div style="margin:18px 0;font-size:1.6rem;font-weight:700">&amp;</div>
+
+        <div>
+          <div class="title">BRIDE'S FAMILY</div>
+          <div class="names">Abulkalam Azath &amp; Rasiya Banu</div>
+        </div>
+
+        <p style="margin-top:18px;line-height:1.5">With joyful hearts and faith in Allah's plan, we invite you to witness and bless the wedding of our beloved children.</p>
+      </div>
+    </section>
+
+    <!-- Section 3: Details -->
+    <section>
+      <div class="info-block">
+        <div style="font-family:'Cormorant Garamond', serif;font-size:1.2rem;font-weight:700;">NOOR ARFIN <br>B.E., CSE</div>
+        <div style="font-size:1.2rem;font-weight:700;margin:14px 0">&amp;</div>
+        <div style="font-family:'Cormorant Garamond', serif;font-size:1.2rem;font-weight:700;">SULAIKA AMANI <br>M.Sc, B.Ed</div>
+
+        <div class="orn"><svg viewBox="0 0 400 16" width="100%"><g fill="none" stroke="#6a0f1c" stroke-width="2" stroke-linecap="round"><path d="M0 8 L120 8" /><path d="M145 8 L255 8" /><path d="M280 8 L400 8" /><circle cx="200" cy="8" r="2" fill="#6a0f1c" /></g></svg></div>
+
+        <div class="info-title">Date</div>
+        <div class="info-text">Thursday, 01 January 2026</div>
+
+        <div class="info-title">Time</div>
+        <div class="info-text">Reception: 11:30 AM - 03:00 PM</div>
+
+        <div class="info-title">Venue</div>
+        <div class="info-text">G.L.Palace A/C Mahal @ R.S.Mangalam, Ramanathapuram - 623525</div>
+        <a class="btn-map" target="_blank" href="https://maps.app.goo.gl/xR348FD6RfT2FwaHA">View Location</a>
+      </div>
+    </section>
+
+    <!-- Section 4: Countdown -->
+    <section>
+      <div style="width:95%;max-width:420px;margin:0 auto">
+        <div style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:12px">COUNTING DAYS</div>
+        <div class="count-grid">
+          <div class="count-item"><div class="count-label">Days</div><div id="days" class="count-num count-num-days">00</div></div>
+          <div class="count-item"><div class="count-label">Hours</div><div id="hours" class="count-num">00</div></div>
+          <div class="count-item"><div class="count-label">Minutes</div><div id="minutes" class="count-num">00</div></div>
+          <div class="count-item"><div class="count-label">Seconds</div><div id="seconds" class="count-num">00</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Guestbook -->
+    <section>
+      <div class="guest">
+        <div style="font-size:1rem;line-height:1.7;">بارك الله لك، وبارَكَ عَلَيْكَ، وَجَمَعَ بينكما في خير</div><br>
+        <div style="font-size:1rem;line-height:1.7">May Allah bless your marriage with love, happiness, and barakah. May He keep you united in goodness and grant you peace and joy in this life and the next. Aameen.</div>
+        <br><br><br><div class="names">#ArfinAndSulaikaForever</div>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    /* ====== particles (tiny bokeh) ====== */
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = innerWidth;
+    let h = canvas.height = innerHeight;
+    const particles = [];
+    function rand(min,max){return Math.random()*(max-min)+min}
+    for(let i=0;i<30;i++){particles.push({x:rand(0,w),y:rand(0,h),r:rand(0.6,2.2),v:rand(0.1,0.6),a:rand(0.05,0.9)})}
+    function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight}
+    addEventListener('resize',resize);
+    function drawParticles(){ctx.clearRect(0,0,w,h);for(const p of particles){p.y -= p.v; p.x += Math.sin(p.y*0.01)*0.2; if(p.y < -10){p.y = h+10; p.x = rand(0,w)}; ctx.globalAlpha = p.a; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill()} requestAnimationFrame(drawParticles)}
+    drawParticles();
+
+    /* ====== Parallax subtle movement for bg layers ====== */
+    const bg1 = document.getElementById('bg1');
+    const bg2 = document.getElementById('bg2');
+    let lastY = 0;
+    window.addEventListener('scroll',()=>{const y = window.scrollY || window.pageYOffset; const delta = (y - lastY) * 0.15; bg1.style.transform = `translateY(${ -y * 0.08 }px)`; bg2.style.transform = `translateY(${ -y * 0.03 }px)`; lastY = y;});
+
+    /* ====== Audio control ====== */
+    const audio = document.getElementById('bgAudio');
+    const audioBtn = document.getElementById('audioBtn');
+    audioBtn.addEventListener('click',()=>{
+      if(audio.paused){audio.play().catch(()=>{}); audioBtn.innerText='🔊 Pause Music'; audioBtn.setAttribute('aria-pressed','true')}else{audio.pause(); audioBtn.innerText='🔈 Play Music'; audioBtn.setAttribute('aria-pressed','false')}});
+
+    /* ====== Open invite (reveal sections) ====== */
+    const all = document.getElementById('allSections');
+    function openInvite(){ 
+      document.getElementById('intro').style.display='none'; document.getElementById('swipePopup').classList.add('show'); all.style.display='block'; document.body.style.overflow='auto'; setTimeout(()=>document.getElementById('swipePopup').classList.remove('show'),3500); initProgressDots(); highlightDot(0); 
+      // Auto-play audio
+      audio.volume = 0.11;   // lower volume
+      audio.play().catch(()=>{});
+      audioBtn.innerText = '🔊 Pause Music';
+      audioBtn.setAttribute('aria-pressed','true');
+    }
+
+    /* ====== Scroll snapping & section enter animations (IntersectionObserver) ====== */
+    const sections = [];
+    function initObservers(){ const secs = document.querySelectorAll('#allSections section'); secs.forEach((s,i)=>{ sections.push(s); s.classList.add('will-animate'); }); const observer = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('enter'); const idx = Array.from(document.querySelectorAll('#allSections section')).indexOf(e.target); highlightDot(idx); }}); },{threshold:0.6}); secs.forEach(s=>observer.observe(s)); }
+
+    /* ====== Progress dots ====== */
+    function initProgressDots(){ const dots = document.getElementById('progressDots'); dots.innerHTML=''; const count = document.querySelectorAll('#allSections section').length; for(let i=0;i<count;i++){ const d = document.createElement('div'); d.className='dot'; dots.appendChild(d);} }
+    function highlightDot(i){ const ds = document.querySelectorAll('.progress-ind .dot'); ds.forEach((d,idx)=>d.classList.toggle('active',idx===i)); }
+
+    /* ====== Countdown ====== */
+    const target = new Date('January 1, 2026 00:00:00').getTime(); function update(){ const now=Date.now(); let diff = target - now; if(diff<0) diff=0; const d = Math.floor(diff / (1000*60*60*24)); const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60)); const m = Math.floor((diff % (1000*60*60)) / (1000*60)); const s = Math.floor((diff % (1000*60)) / 1000); document.getElementById('days').textContent = String(d).padStart(2,'0'); document.getElementById('hours').textContent = String(h).padStart(2,'0'); document.getElementById('minutes').textContent = String(m).padStart(2,'0'); document.getElementById('seconds').textContent = String(s).padStart(2,'0'); }
+    update(); setInterval(update,1000);
+
+    /* ====== Initialize when sections revealed ====== */
+    document.addEventListener('visibilitychange', ()=>{ if(!document.hidden){ update(); }});
+
+    // Hook when allSections becomes visible
+    const allObserver = new MutationObserver((m)=>{ if(all.style.display==='block'){ initObservers(); window.removeEventListener('scroll',null); }});
+    allObserver.observe(document.getElementById('allSections'),{attributes:true,attributeFilter:['style']});
+
+    // touch hint on first load
+    setTimeout(()=>document.getElementById('swipePopup').classList.add('show'),900);
+    setTimeout(()=>document.getElementById('swipePopup').classList.remove('show'),4200);
+  </script>
+</body>
+</html>
