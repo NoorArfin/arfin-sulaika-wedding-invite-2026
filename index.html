@@ -26,7 +26,7 @@
     #particles{position:fixed;inset:0;pointer-events:none;z-index:-2}
 
     /* Intro */
-    #intro{height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px;position:relative}
+    #intro{height:100dvh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:24px;position:relative}
     #intro-card{width:92%;max-width:420px;background:rgba(255,255,255,0.06);backdrop-filter:blur(6px) saturate(120%);border-radius:18px;padding:20px;border:1px solid rgba(255,255,255,0.06)}
     h1.intro-title{font-family:'Playfair Display',sans-serif;font-size:1rem;letter-spacing:1px}
     .intro-names{font-family:'Tangerine', cursive !important;font-size:3.2rem;color:transparent;background:linear-gradient(90deg,#b8945f,#e5d1a8);-webkit-background-clip:text;background-clip:text;margin-top:10px}
@@ -37,7 +37,7 @@
 
     /* sections container with scroll-snap */
     #allSections{height:100dvh !important;min-height: 100dvh !important;overflow-y:auto;scroll-snap-type:y mandatory;-webkit-overflow-scrolling:touch;display:none}
-    section{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;scroll-snap-align:start}
+    section{min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 16px;text-align:center;scroll-snap-align:start}
 
     /* section typography */
     .small{font-size:0.95rem}
@@ -233,6 +233,7 @@
     function rand(min,max){return Math.random()*(max-min)+min}
     for(let i=0;i<30;i++){particles.push({x:rand(0,w),y:rand(0,h),r:rand(0.6,2.2),v:rand(0.1,0.6),a:rand(0.05,0.9)})}
     function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight}
+    document.documentElement.style.height = window.innerHeight + "px";
     addEventListener('resize',resize);
     function drawParticles(){ctx.clearRect(0,0,w,h);for(const p of particles){p.y -= p.v; p.x += Math.sin(p.y*0.01)*0.2; if(p.y < -10){p.y = h+10; p.x = rand(0,w)}; ctx.globalAlpha = p.a; ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill()} requestAnimationFrame(drawParticles)}
     drawParticles();
@@ -285,6 +286,7 @@
   </script>
 </body>
 </html>
+
 
 
 
