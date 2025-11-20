@@ -18,9 +18,11 @@
     }
 
     /* Background layers (parallax) */
-    .bg-layer{position:fixed;inset:0;background-size:cover;background-position:center;transform:translateZ(0);will-change:transform;height: 100dvh;width: 100%;}
+    .bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat: no-repeat;transform:translateZ(0);will-change:transform;height: 100dvh;width: 100vw;}
     #bg1{background-image:url('bg_image.png');filter:brightness(1);z-index:-4}
     #bg2{background-image:linear-gradient(rgba(255,255,255,0.02),rgba(0,0,0,0.03));z-index:-3;mix-blend-mode:overlay}
+
+    #bgWrap{position: fixed;inset: 0;height: 100dvh;width: 100vw;overflow: hidden;z-index: -10;transition: filter 1s ease;}
 
     /* subtle particle canvas */
     #particles{position:fixed;inset:0;pointer-events:none;z-index:-2}
@@ -114,8 +116,10 @@
 <body>
 
   <!-- Parallax background layers -->
-  <div id="bg1" class="bg-layer"></div>
-  <div id="bg2" class="bg-layer"></div>
+  <div id="bgWrap">
+      <div id="bg1" class="bg-layer"></div>
+      <div id="bg2" class="bg-layer"></div>
+  </div>
   <canvas id="particles"></canvas>
 
   <!-- audio control (user replace "nikah.mp3") -->
@@ -242,7 +246,7 @@
     const bg1 = document.getElementById('bg1');
     const bg2 = document.getElementById('bg2');
     let lastY = 0;
-    window.addEventListener('scroll',()=>{const y = window.scrollY || window.pageYOffset; const delta = (y - lastY) * 0.15; bg1.style.transform = `translateY(${ -y * 0.08 }px)`; bg2.style.transform = `translateY(${ -y * 0.03 }px)`; lastY = y;});
+    window.addEventListener('scroll',()=>{const y = window.scrollY || window.pageYOffset; const delta = (y - lastY) * 0.15; bg1.style.transform = `translateY(${y * -0.03}px)`; bg2.style.transform = `translateY(${y * -0.01}px)`; lastY = y;});
 
     /* ====== Audio control ====== */
     const audio = document.getElementById('bgAudio');
@@ -255,10 +259,17 @@
     function openInvite(){ 
       document.getElementById('intro').style.display='none'; document.getElementById('swipePopup').classList.add('show'); all.style.display='block'; document.body.style.overflow='auto'; setTimeout(()=>document.getElementById('swipePopup').classList.remove('show'),3500); initProgressDots(); highlightDot(0); 
       // Auto-play audio
-      audio.volume = 0.11;   // lower volume
-      audio.play().catch(()=>{});
+      audio.volume = 0.11;
+      audio.play().catch(() => {});
       audioBtn.innerText = '🔊 Pause Music';
-      audioBtn.setAttribute('aria-pressed','true');
+      audioBtn.setAttribute('aria-pressed', 'true');
+      
+      // ⏳ Auto-stop after 20 seconds
+      setTimeout(() => {
+          audio.pause();
+          audioBtn.innerText = '🔈 Play Music';
+          audioBtn.setAttribute('aria-pressed', 'false');
+      }, 20000); // 20,000 ms = 20 seconds
     }
 
     /* ====== Scroll snapping & section enter animations (IntersectionObserver) ====== */
@@ -286,11 +297,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
